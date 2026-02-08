@@ -169,14 +169,27 @@ udp_fanout_downstream_health{listener="syslog",endpoint="10.42.0.5:5514"}
 
 ## Comparison
 
-| Feature | udp-fanout (TC eBPF) | userspace proxy | kernel UDP load balancer |
-|---------|----------------------|-----------------|--------------------------|
-| Throughput | 10Gbps+ | ~1-2Gbps | 10Gbps+ |
-| Latency | <1µs | ~100µs | <1µs |
-| CPU overhead | <5% | 20-40% | <5% |
-| K8s integration | Native (EndpointSlice) | Manual config | None |
-| Health checks | Active probes | Passive (TCP) | None |
-| Deployment | DaemonSet | Deployment/Service | iptables rules |
+Comparison for UDP proxy forwarding workloads:
+
+| Feature | udp-fanout (TC eBPF) | NGINX | Envoy | HAProxy |
+|---------|----------------------|-------|-------|---------|
+| **Throughput** | 10Gbps+ | ~2-5 Gbps | ~3-8 Gbps | ~5-10 Gbps |
+| **Latency** | <1µs | ~50-100µs | ~50-150µs | ~30-80µs |
+| **CPU overhead** | <5% | 15-30% | 20-40% | 10-25% |
+| **Data plane** | Kernel (eBPF) | Userspace | Userspace | Userspace |
+| **Load balancing** | Round-robin | Round-robin, hash | Consistent hash, ring hash | Round-robin, least-conn, hash |
+| **Stateful** | No (stateless) | Yes (per-connection) | Yes (per-connection) | Yes (per-connection) |
+| **K8s integration** | Native (EndpointSlice) | Manual config | Service mesh (xDS) | Manual config |
+| **Health checks** | Active (ICMP/UDP) | Passive | Active (HTTP/gRPC) | Active (TCP/HTTP) |
+| **Config complexity** | Low (YAML) | Medium (nginx.conf) | High (xDS/Envoy API) | Medium (HAProxy cfg) |
+| **Observability** | Prometheus | Logs, Prometheus | Rich (traces, stats) | Logs, Prometheus |
+| **Best for** | High-throughput fanout | General L4/L7 proxy | Service mesh | L4/L7 load balancing |
+
+**Why eBPF is faster for UDP fanout:**
+- Zero userspace copies — packet stays in kernel from NIC to pod veth
+- No context switches — eBPF runs in softirq context at packet arrival
+- Stateless forwarding — no connection tracking overhead (UDP is connectionless)
+- Direct redirect — `bpf_redirect_neigh()` bypasses full network stack traversal
 
 ## Limitations
 
