@@ -146,7 +146,6 @@ docker build -t udp-fanout:latest .
 # Or use pre-built binaries (faster)
 docker build -t udp-fanout:latest -f Dockerfile.runtime .
 ```
-
 ## Documentation
 
 - **[Deployment Guide](docs/DEPLOYMENT.md)**: Kubernetes deployment, troubleshooting, production best practices
@@ -173,9 +172,9 @@ Comparison for UDP proxy forwarding workloads:
 
 | Feature | udp-fanout (TC eBPF) | NGINX | Envoy | HAProxy |
 |---------|----------------------|-------|-------|---------|
-| **Throughput** | Very High | Medium | Medium-High | High |
+| **Throughput** | Very High | Medium | Medium-High | Low-Medium |
 | **Latency** | Very Low | Medium | Medium | Low |
-| **CPU overhead** | Very Low | Medium | High | Low-Medium |
+| **CPU overhead** | Very Low | Medium-High | Low-Medium | Medium-High |
 | **Data plane** | Kernel (eBPF) | Userspace | Userspace | Userspace |
 | **Load balancing** | Round-robin | Round-robin, hash | Consistent hash, ring hash | Round-robin, least-conn, hash |
 | **Stateful** | No (stateless) | Yes (per-connection) | Yes (per-connection) | Yes (per-connection) |
