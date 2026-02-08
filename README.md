@@ -173,9 +173,9 @@ Comparison for UDP proxy forwarding workloads:
 
 | Feature | udp-fanout (TC eBPF) | NGINX | Envoy | HAProxy |
 |---------|----------------------|-------|-------|---------|
-| **Throughput** | 10Gbps+ | ~2-5 Gbps | ~3-8 Gbps | ~5-10 Gbps |
-| **Latency** | <1µs | ~50-100µs | ~50-150µs | ~30-80µs |
-| **CPU overhead** | <5% | 15-30% | 20-40% | 10-25% |
+| **Throughput** | Very High | Medium | Medium-High | High |
+| **Latency** | Very Low | Medium | Medium | Low |
+| **CPU overhead** | Very Low | Medium | High | Low-Medium |
 | **Data plane** | Kernel (eBPF) | Userspace | Userspace | Userspace |
 | **Load balancing** | Round-robin | Round-robin, hash | Consistent hash, ring hash | Round-robin, least-conn, hash |
 | **Stateful** | No (stateless) | Yes (per-connection) | Yes (per-connection) | Yes (per-connection) |
