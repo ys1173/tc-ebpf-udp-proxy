@@ -72,6 +72,8 @@ kubectl -n udp-fanout logs daemonset/udp-fanout | grep "attached TC eBPF"
 
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed Kubernetes deployment guide.
 
+**For MetalLB LoadBalancer integration**: See [docs/METALLB_DEPLOYMENT.md](docs/METALLB_DEPLOYMENT.md) for deploying with MetalLB L2 VIP using a dummy interface approach.
+
 ### Local Testing (Userspace Mode)
 
 ```bash
@@ -148,6 +150,7 @@ docker build -t udp-fanout:latest -f Dockerfile.runtime .
 ## Documentation
 
 - **[Deployment Guide](docs/DEPLOYMENT.md)**: Kubernetes deployment, troubleshooting, production best practices
+- **[MetalLB Deployment](docs/METALLB_DEPLOYMENT.md)**: Deploy with MetalLB L2 LoadBalancer and VIP redundancy
 - **[Architecture](docs/ARCHITECTURE.md)**: Deep dive into eBPF packet flow, round-robin algorithm, FIB lookup
 - **[Configuration Reference](docs/CONFIGURATION.md)**: All config options explained
 - **[Development Guide](docs/DEVELOPMENT.md)**: Building, testing, contributing
